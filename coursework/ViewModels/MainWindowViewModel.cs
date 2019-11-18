@@ -1,36 +1,69 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Windows;
+using System.Windows.Input;
+using coursework.Commands;
+using Microsoft.Win32;
 
 namespace coursework.ViewModels
 {
     class MainWindowViewModel: BaseViewModel
     {
-        public string NameTextBlock { get; private set; }
-        public string AgeTextBlock { get; private set; }
-        public string AddressTextBlock { get; private set; }
+        public string MessageHeader { get; private set; }
+        public string MessageBody { get; private set; }
+        public string MessagTypeTextBlock { get; private set; }
         
-        public string ClearButtonText { get; private set; }
-        public string SaveButtonText { get; private set; }
+        public string LoadXMLText { get; private set; }
+        public string GenerateReportButtonText { get; private set; }
 
-        public string NameTextBox { get; set; }
-        public string AgeTextBox { get; set; }
-        public string AddressTextBox { get; set; }
+        public ICommand LoadXMLCommand { get; private set; }
+        public ICommand GenerateReportCommand { get; private set; }
+
+        public string MessageHeaderTextBox { get; set; }
+        public string MessageBodyTextBox { get; set; }
+        public string MessagTypeText { get; set; }
+
 
 
 
         public MainWindowViewModel()
         {
-            NameTextBlock = "Name";
-            AgeTextBlock = "Age";
-            AddressTextBlock = "Address";
-            ClearButtonText = "Clear";
-            SaveButtonText = "Save";
+            MessageHeader = "Message Header";
+            MessageBody = "Message Body";
+            MessagTypeTextBlock = "Message type:";
+            LoadXMLText = "Load File";
+            GenerateReportButtonText = "Generate Report";
 
+            MessageHeaderTextBox = string.Empty;
+            MessageBodyTextBox = string.Empty;
+            MessagTypeText = "SMS";
 
-            NameTextBox = string.Empty;
-            AgeTextBox = string.Empty;
-            AddressTextBox = string.Empty;
+            LoadXMLCommand = new RelayCommands(LoadXMLClick);
+            GenerateReportCommand = new RelayCommands(GenerateReportClick);
+
+        }
+
+        private void GenerateReportClick()
+        {
+            MessageBox.Show("Generate Report Click");
+        }
+
+        private void LoadXMLClick()
+        {
+            // Create OpenFileDialog 
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            // Set filter for file extension and default file extension 
+            dlg.DefaultExt = ".xml";
+
+            // Display OpenFileDialog by calling ShowDialog method 
+            Nullable<bool> result = dlg.ShowDialog();
+
+            // Get the selected file name and display in a TextBox 
+            if (result == false) return;
+            MessageBox.Show(dlg.FileName);
+
         }
     }
 }
