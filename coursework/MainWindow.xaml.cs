@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using coursework.ViewModels;
 
 namespace coursework
 {
@@ -10,6 +11,7 @@ namespace coursework
         public MainWindow()
         {
             InitializeComponent();
+            this.DataContext = new MainWindowViewModel();
         }
     }
 }

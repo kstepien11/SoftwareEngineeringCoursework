@@ -5,9 +5,42 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:coursework"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="658">
     <Grid>
-        <Button Content="Button" HorizontalAlignment="Left" Margin="134,117,0,0" VerticalAlignment="Top" Height="47" Width="117"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--Row 1-->
+        <TextBlock Text="{Binding NameTextBlock}" Grid.Row="0" Grid.Column="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding NameTextBox}" Grid.Row="0" Grid.Column="1"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="150"/>
+
+        <!--Row 2-->
+        <TextBlock Text="{Binding AgeTextBlock}" Grid.Row="1" Grid.Column="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding AgeTextBox}" Grid.Row="1" Grid.Column="1"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="150"/>
+
+        <!--Row 3-->
+        <TextBlock Text="{Binding AddressTextBlock}" Grid.Row="2" Grid.Column="0"
+                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <TextBox Text="{Binding AddressTextBox}" Grid.Row="2" Grid.Column="1"
+                 HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="150"/>
+
+        <!--Row 4-->
+        <Button Content="{Binding ClearButtonText}" Grid.Row="4" Grid.Column="0"
+                HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="150"/>
+        <Button Content="{Binding SaveButtonText}" Grid.Row="4" Grid.Column="1"
+                HorizontalAlignment="Center" VerticalAlignment="Center" MinWidth="150"/>
 
     </Grid>
 </Window>
