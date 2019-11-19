@@ -12,6 +12,6 @@ namespace coursework
         {
             InitializeComponent();
             this.DataContext = new MainWindowViewModel();
-        }
+        }       
     }
 }

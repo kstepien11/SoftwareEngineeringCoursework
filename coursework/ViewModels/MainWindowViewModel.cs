@@ -21,12 +21,60 @@ namespace coursework.ViewModels
         public ICommand LoadXMLCommand { get; private set; }
         public ICommand GenerateReportCommand { get; private set; }
 
-        public string MessageHeaderTextBox { get; set; }
-        public string MessageBodyTextBox { get; set; }
-        public string MessagTypeText { get; set; }
+        //public string MessageHeaderTextBox { get; set; }
+        //public string MessageBodyTextBox { get; set ; }
+        //public string MessagTypeText { get; set; }
 
+        public string _MessageBodyTextBox;
+        public string MessageBodyTextBox {
+            get {
+                return _MessageBodyTextBox;
+            }
+            set {
+                if (_MessageBodyTextBox != value)
+                {
+                    _MessageBodyTextBox = value;
+                    OnPropertyChanged("MessageBodyTextBox");
+                }
 
+            } 
+        }
 
+        public string _MessageHeaderTextBox;
+        public string MessageHeaderTextBox
+        {
+            get
+            {
+                return _MessageHeaderTextBox;
+            }
+            set
+            {
+                if (_MessageHeaderTextBox != value)
+                {
+                    _MessageHeaderTextBox = value;
+                    OnPropertyChanged("MessageHeaderTextBox");
+                }
+
+            }
+        }
+
+        public string _MessagTypeText;
+        public string MessagTypeText
+        {
+            get
+            {
+                return _MessagTypeText;
+            }
+            set
+            {
+                if (_MessagTypeText != value)
+                {
+                    _MessagTypeText = value;
+                    OnPropertyChanged("MessagTypeText");
+                }
+
+            }
+        }
 
         public MainWindowViewModel()
         {
@@ -36,8 +84,8 @@ namespace coursework.ViewModels
             LoadXMLText = "Load File";
             GenerateReportButtonText = "Generate Report";
 
-            MessageHeaderTextBox = string.Empty;
-            MessageBodyTextBox = string.Empty;
+            _MessageHeaderTextBox = string.Empty;
+            _MessageBodyTextBox = string.Empty;
             MessagTypeText = "SMS";
 
             LoadXMLCommand = new RelayCommands(LoadXMLClick);
@@ -48,6 +96,9 @@ namespace coursework.ViewModels
         private void GenerateReportClick()
         {
             MessageBox.Show("Generate Report Click");
+            MessageBodyTextBox = "blablatest";
+            MessageHeaderTextBox = "testtest";
+            MessagTypeText = "Twitter";
         }
 
         private void LoadXMLClick()
