@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
 using coursework.ViewModels;
 
 namespace coursework
@@ -10,8 +11,19 @@ namespace coursework
     {
         public MainWindow()
         {
-            InitializeComponent();
-            this.DataContext = new MainWindowViewModel();
-        }       
+            InitializeComponent();            
+            
+            object model = new MainWindowViewModel();
+            this.DataContext = model;
+        }
+
+        private void HandleDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            var item = ((ListViewItem)sender).Content;
+            if (item != null)
+            {
+                MessageBox.Show(item.ToString());
+            }
+        }
     }
 }
