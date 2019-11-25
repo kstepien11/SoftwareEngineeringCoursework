@@ -15,6 +15,7 @@ namespace coursework
             
             object model = new MainWindowViewModel();
             this.DataContext = model;
+            
         }
 
         private void HandleDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
@@ -22,7 +23,12 @@ namespace coursework
             var item = ((ListViewItem)sender).Content;
             if (item != null)
             {
-                MessageBox.Show(item.ToString());
+                
+                MessageWindow window = new MessageWindow(item.ToString());
+                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                window.Topmost = true;
+                window.Show();
+
             }
         }
     }

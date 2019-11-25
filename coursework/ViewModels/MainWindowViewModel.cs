@@ -152,8 +152,11 @@ namespace coursework.ViewModels
             }
         }
 
+        public MessageProcessor p;
+
         public MainWindowViewModel()
         {
+
             MessageHeader = "Message Header";
             MessageBody = "Message Body";
             MessagTypeTextBlock = "Message type:";
@@ -162,97 +165,47 @@ namespace coursework.ViewModels
 
             _MessageHeaderTextBox = string.Empty;
             _MessageBodyTextBox = string.Empty;
-            _Subject = "SMS";
-            _Sender = "test";
+            _Subject = string.Empty;
+            _Sender = string.Empty;
 
             LoadXMLCommand = new RelayCommands(LoadXMLClick);
             GenerateReportCommand = new RelayCommands(GenerateReportClick);
             AddNewCommand = new RelayCommands(AddNew);
-           /* PrevMessageCommand = new RelayCommands(PrevMessage);*/
 
-
+            p = new MessageProcessor();
+            p.loadAbbreviations();
 
         }
+
         private void AddNew()
         {
-            Message mes = new Message(_MessageHeaderTextBox, _Sender, _Subject, _MessageBodyTextBox);
-            this.MessageList.Add(mes);
-
-            string hold = "";
-            for (int i = 0; i < MessageList.Count; i++)
+            if (_MessageHeaderTextBox == string.Empty || _MessageBodyTextBox == string.Empty || _Sender == string.Empty)
             {
-                hold += " Message {0}" + i + "\n------------------------------------------" +
-                 "\n Header : {0}" + MessageList[i].Header +
-                 "\n Sender  : {0}" + MessageList[i].Sender +
-                 "\n Subject ...... : {0}" + MessageList[i].Subject +
-                 "\n Body ... : {0}" + MessageList[i].Body +
-                 "\n";
+                MessageBox.Show("Please fill the values for header, sender and message body");
+                p.replaceAbreviations(_MessageBodyTextBox);
             }
-            MessageBox.Show(hold);
-
+            else if (!p.ValidateInput(_MessageHeaderTextBox, _Sender, _Subject)) { }
+            else
+            {
+                Message mes = new Message(_MessageHeaderTextBox, _Sender, _Subject, p.replaceAbreviations(_MessageBodyTextBox));
+                mes.Type = p.SetType(mes.Header); 
+                MessageBox.Show(mes.Type);
+                this.MessageList.Add(mes);
+                MessageHeaderTextBox = string.Empty;
+                MessageBodyTextBox = string.Empty;
+                Subject = string.Empty;
+                Sender = string.Empty;
+                MessageBox.Show("Message succesfully added!");
+            }
         }
         private void GenerateReportClick()
         {
-            MessageBox.Show("Generate Report Click");
-            MessageBodyTextBox = "blablatest";
-            MessageHeaderTextBox = "testtest";
-            MessagTypeText = "Twitter";
+            MessageBox.Show("Generate Report Click");         
         }
 
-        /*private void NextMessage()
-        {
-            if (whichMessageIsDisplayed < 0) whichMessageIsDisplayed = 0;
-            //MessageBox.Show("Clicked next button");
-            //fill the text boxes with first message 
-            
-            if (whichMessageIsDisplayed >= 0 && whichMessageIsDisplayed <= MessageList.Count)
-            {
-              
-                MessageBodyTextBox = "Sender: " + MessageList[whichMessageIsDisplayed].Sender +
-                                   "\nSubject: " + MessageList[whichMessageIsDisplayed].Subject +
-                                   "\n" + MessageList[whichMessageIsDisplayed].Body;
-
-                MessageHeaderTextBox = MessageList[whichMessageIsDisplayed].Header;
-                MessagTypeText = "Twitter";
-                MessageBox.Show("" + whichMessageIsDisplayed);
-                this.whichMessageIsDisplayed++;
-            }
-           else
-            {
-                MessageBox.Show("No more messages- next");
-                MessageBox.Show("" + whichMessageIsDisplayed);
-                this.whichMessageIsDisplayed = MessageList.Count;
-            }
-        }
-
-        private void PrevMessage()
-        {
-            //MessageBox.Show("Clicked prev button");
-            //fill the text boxes with first message 
-
-            if (whichMessageIsDisplayed >= 0 && whichMessageIsDisplayed <= MessageList.Count)
-            {
-                MessageBodyTextBox = "Sender: " + MessageList[whichMessageIsDisplayed].Sender +
-                                   "\nSubject: " + MessageList[whichMessageIsDisplayed].Subject +
-                                   "\n" + MessageList[whichMessageIsDisplayed].Body;
-
-                MessageHeaderTextBox = MessageList[whichMessageIsDisplayed].Header;
-                MessagTypeText = "Twitter";
-                MessageBox.Show(""+whichMessageIsDisplayed);
-                this.whichMessageIsDisplayed--;
-            }
-            else
-            {
-                MessageBox.Show("no more msg");
-                MessageBox.Show("" + whichMessageIsDisplayed);
-                this.whichMessageIsDisplayed = 0;
-            }
-        }*/
-
-
-        
         private void LoadXMLClick()
         {
+            MessageProcessor processor = new MessageProcessor();
             // Create OpenFileDialog 
             Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
             // Set filter for file extension and default file extension 
@@ -276,30 +229,10 @@ namespace coursework.ViewModels
                                           node["Subject"].InnerText,
                                           node["Body"].InnerText);
 
-              
+                mes.Type = processor.SetType(mes.Header);
                 this.MessageList.Add(mes);
             }
-            string hold="";
-            for (int i = 0; i < MessageList.Count; i++)
-            {
-               hold+= " Message {0}"+ i+"\n------------------------------------------"+
-                "\n Header : {0}"+ MessageList[i].Header+
-                "\n Sender  : {0}"+ MessageList[i].Sender+
-                "\n Subject ...... : {0}"+ MessageList[i].Subject+
-                "\n Body ... : {0}"+ MessageList[i].Body+
-                "\n";
-            }
-            MessageBox.Show(hold);
-
-            //fill the text boxes with first message 
-            MessageBodyTextBox = "Sender: "+ MessageList[0].Sender + 
-                                 "\nSubject: "+ MessageList[0].Subject+
-                                 "\n"+MessageList[0].Body;
-
-            MessageHeaderTextBox = MessageList[0].Header;
-            MessagTypeText = "Twitter";
-
-           
+                                
             /* string json = JsonConvert.SerializeXmlNode(doc);
              MessageBox.Show(json);
              File.WriteAllText(@"messages.json", JsonConvert.SerializeObject(json, Newtonsoft.Json.Formatting.Indented));*/

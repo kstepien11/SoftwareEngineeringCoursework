@@ -10,6 +10,7 @@ namespace coursework
         public string Sender { get;  set; }
         public string Subject { get;  set; }
         public string Body { get;  set; }
+        public string Type { get;  set; }
 
         public Message(string header, string sender, string subject, string body)
         {
@@ -21,7 +22,8 @@ namespace coursework
 
         public override string ToString()
         {
-            return "Header: "+ this.Header+
+            return "Message Type: "+this.Type+
+                "\n\nHeader: "+ this.Header+
                 "\n\nSender: "+ this.Sender+
                 "\n\nSubject: "+this.Subject+
                 "\n\nMessage: \n"+this.Body;

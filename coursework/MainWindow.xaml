@@ -16,7 +16,8 @@
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="100"/>
+                    <RowDefinition Height="60"/>
+                    <RowDefinition Height="50"/>
                     <RowDefinition Height="50"/>
                     <RowDefinition Height="250"/>
                     <RowDefinition Height="*"/>
@@ -24,28 +25,30 @@
 
                 <!--Row 1-->
                 <TextBlock Text="{Binding MessageHeader}" Grid.Column="2"
-                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,0,0,0"/>
-                <TextBox Text="{Binding MessageHeaderTextBox}" AcceptsReturn="true" Grid.Column="3"
-                 HorizontalAlignment="Left" VerticalAlignment="Center" MinWidth="500"/>
+                   HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="8,0,0,0"/>
+                <TextBox Text="{Binding MessageHeaderTextBox}" AcceptsReturn="True" Grid.Column="3"
+                 HorizontalAlignment="Left" VerticalAlignment="Bottom" MinWidth="500"/>
 
                 <!--Row 2-->
-                <TextBlock Text="{Binding MessagTypeTextBlock}" Grid.Row="1" Grid.Column="2"
-                   HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="30" Margin="8,0,0,0"/>
-                <TextBlock Text="{Binding MessagTypeText, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="3"
-                   HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="30"/>
-
+                <TextBlock Text="Sender" Grid.Row="1" Grid.Column="2"
+                   HorizontalAlignment="Left" VerticalAlignment="Top" MinHeight="30" Margin="8,30,0,0"/>
+                <TextBox Text="{Binding Sender, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Grid.Column="3"
+                   HorizontalAlignment="Left" VerticalAlignment="Top"  MinWidth="500" Margin="0,30,0,0"/>
                 <!--Row 3-->
-                <TextBlock Text="{Binding MessageBody}" Grid.Row="2" Grid.Column="2"
-                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,0,0,0"/>
-                <TextBox x:Name="tb" Text="{Binding MessageBodyTextBox}" AcceptsReturn="true" Grid.Row="2" Grid.Column="3"
-                 HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="500" MinHeight="220" />
-
+                <TextBlock Text="Subject" Grid.Row="2" Grid.Column="2"
+                   HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="8,30,0,0"/>
+                <TextBox Text="{Binding Subject, UpdateSourceTrigger=PropertyChanged}" Grid.Row="2" Grid.Column="3"
+                   HorizontalAlignment="Left" VerticalAlignment="Top"  MinWidth="500" Margin="0,30,0,0"/>
                 <!--Row 4-->
-                <Button Content="{Binding GenerateReportButtonText}" Command="{Binding GenerateReportCommand}" Grid.Row="3" Grid.Column="1"
-                HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="150" Margin="10,0,0,0" Grid.ColumnSpan="2" />
+                <TextBlock Text="{Binding MessageBody}" Grid.Row="3" Grid.Column="2"
+                   HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,30,0,0"/>
+                <TextBox x:Name="tb" Text="{Binding MessageBodyTextBox}" AcceptsReturn="true" Grid.Row="3" Grid.Column="3"
+                 HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="500" MinHeight="220" Margin="0,30,0,0" />
 
-                <Button Content="Add new Message" Command="{Binding AddNewCommand}" Grid.Row="3" Grid.Column="3"
-                HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="150"  Grid.ColumnSpan="2" />
+                <!--Row 5-->
+               
+                <Button Content="Add new Message" Command="{Binding AddNewCommand}" Grid.Row="4" Grid.Column="3"
+                HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="150"  Grid.ColumnSpan="2" Margin="0,30,0,0" />
 
             </Grid>
         </TabItem>
@@ -54,6 +57,11 @@
             <Grid Background="#FFE5E5E5">
                 <Button Content="{Binding LoadXMLText}" Command="{Binding LoadXMLCommand}" Grid.Row="3" Grid.Column="1"
                 HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="150" Grid.ColumnSpan="2" Margin="35,5,5,5"/>
+                <Button Content="{Binding GenerateReportButtonText}" Command="{Binding GenerateReportCommand}" Grid.Row="3" Grid.Column="1"
+                HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="150" Grid.ColumnSpan="2" Margin="195,5,5,5"/>
+
+
+
                 <ListView Margin="35" Name="Msgs" ItemsSource="{Binding MessageList}" FontSize="11">
                     <ListView.ItemContainerStyle>                        
                         <Style TargetType="ListViewItem">
