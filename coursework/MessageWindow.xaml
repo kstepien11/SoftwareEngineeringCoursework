@@ -15,10 +15,11 @@
             <RowDefinition Height="500"/>
                       
         </Grid.RowDefinitions>
-
+        <ScrollViewer>
+                    
         <TextBlock Name="TB" Grid.Column="1"
                    HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30,30,30,30"  Width="340" TextWrapping="Wrap"/>
-
+        </ScrollViewer>
     </Grid>
 
 

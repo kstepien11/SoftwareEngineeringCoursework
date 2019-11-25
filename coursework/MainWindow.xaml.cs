@@ -22,8 +22,7 @@ namespace coursework
         {
             var item = ((ListViewItem)sender).Content;
             if (item != null)
-            {
-                
+            {                
                 MessageWindow window = new MessageWindow(item.ToString());
                 window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
                 window.Topmost = true;

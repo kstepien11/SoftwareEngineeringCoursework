@@ -12,12 +12,20 @@ namespace coursework
     {
         List<string> abbreviations ;
         List<string> replaceWith ;
+        public List<string> listOfMentions { get; set; }
+        public List<string> listOfEmails { get; set; }
+        public List<string> listOfHashtags { get; set; }
+
         string startupPath = Environment.CurrentDirectory;
 
         public MessageProcessor()
         {
             this.abbreviations = new List<string>();
             this.replaceWith = new List<string>();
+            this.listOfMentions = new List<string>();
+            this.listOfHashtags = new List<string>();
+            this.listOfEmails = new List<string>();
+
         }
 
         public void loadAbbreviations()
@@ -32,16 +40,9 @@ namespace coursework
                     this.abbreviations.Add(values[0].Trim());
                     this.replaceWith.Add(values[1].Trim());
                 }
-
-                string hold = "";
-                for (int i = 0; i < abbreviations.Count; i++)
-                {
-                    hold += abbreviations[i] + "\n";
-                }
-                MessageBox.Show(hold);
-
             }
         }
+
         public string SetType(string header)
         {
             string type="";           
@@ -125,10 +126,35 @@ namespace coursework
             string hold=textBody;
             string replace="";
             string pattern = "";
-            MessageBox.Show(""+this.abbreviations.Count);
+
+            
+            string patternURLReplace = "<URL Quarantined>";
+            Regex regexURL = new Regex(@"(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})");
+            Regex mentions = new Regex(@"(\@[a-zA-Z0-9_%]*)");
+            Regex hashtags = new Regex(@"([#＃]+)([0-9A-Z_]*[A-Z_]+[a-z0-9_üÀ-ÖØ-öø-ÿ]*)");
+           
+
+
+            foreach (Match match in mentions.Matches(hold))
+            {
+               // MessageBox.Show("found" + match.Value);
+                this.listOfMentions.Add(match.Value);
+            }
+            foreach (Match match in regexURL.Matches(hold))
+            {
+                //MessageBox.Show("found email" + match.Value);
+                this.listOfEmails.Add(match.Value);
+            }
+            foreach (Match match in hashtags.Matches(hold))
+            {
+                // MessageBox.Show("found hash" + match.Value);
+                this.listOfHashtags.Add(match.Value);
+            }
+
 
             for (int i=0;i<this.abbreviations.Count; i++)
             {
+
                 pattern = this.abbreviations[i].Trim();
                 replace = @"<"+this.replaceWith[i]+ @">";
 
@@ -137,8 +163,33 @@ namespace coursework
                     hold = Regex.Replace(hold, pattern, replace);
                 }
             }
-            MessageBox.Show(hold);
+            hold = regexURL.Replace(hold, patternURLReplace);
             return hold;
+        }
+
+        public bool validateSirDate(string date) {
+            bool check= true;
+            Regex regexdate = new Regex(@"^([0]?[1-9]|[1|2][0-9]|[3][0|1])[./-]([0]?[1-9]|[1][0-2])[./-]([0-9]{4}|[0-9]{2})$");
+            Match matchDate = regexdate.Match(date);
+            if (!matchDate.Success)
+            {
+                MessageBox.Show("Please enter a date of the Significant Incident in the subject field");
+                check = false;
+            }
+            return check;
+        }
+
+
+        public bool validateSirCentreCode(string cCode)
+        {
+            bool check = true;
+            Regex regCCode = new Regex(@"^[0-9]{2}-[0-9]{3}-[0-9]{2}");
+            Match match = regCCode.Match(cCode);
+            if (!match.Success)
+            {
+                check = false;
+            }
+            return check;
         }
     }
 

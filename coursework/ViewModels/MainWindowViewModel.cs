@@ -44,13 +44,50 @@ namespace coursework.ViewModels
             }
         }
 
+        public ObservableCollection<Message> sirList;
+        public ObservableCollection<Message> SirList
+        {
+            get
+            {
+                if (sirList == null)
+                {
+                    sirList = new ObservableCollection<Message>();
+                }
+                return sirList;
+            }
+            set
+            {
+                if (sirList == null)
+                {
+                    sirList = new ObservableCollection<Message>();
+                }
+                sirList.Clear();
+                foreach (var item in value)
+                {
+                    sirList.Add(item);
+                }
+                this.OnPropertyChanged("SirList");
+            }
+        }
 
 
-       
+        public List<string> _incidentNature;
+        public List<string> incidentNature {
+            get {
+                return new List<string>() { "Theft of Properties","Staff Attack", "Device Damage", "Raid", "Customer Attack", "Staff Abuse", "Bomb Threat", "Terrorism",
+                "Suspicious Incident", "Sport Injury", "Personal Info Leak" };
+            }
+            set {
+                _incidentNature = value;
+                OnPropertyChanged("incidentNature");
+            }
+        }
+        public string userChoice { get; set;}
+
         public string MessageHeader { get; private set; }
         public string MessageBody { get; private set; }
         public string MessagTypeTextBlock { get; private set; }
-        
+
         public string LoadXMLText { get; private set; }
         public string GenerateReportButtonText { get; private set; }
         public string pathToXML { get; private set; }
@@ -58,11 +95,7 @@ namespace coursework.ViewModels
         public ICommand LoadXMLCommand { get; private set; }
         public ICommand GenerateReportCommand { get; private set; }
         public ICommand AddNewCommand { get; private set; }
-        
-
-        //public string MessageHeaderTextBox { get; set; }
-        //public string MessageBodyTextBox { get; set ; }
-        //public string MessagTypeText { get; set; }
+        public ICommand AddNewSirCommand { get; private set; }
 
         public string _MessageBodyTextBox;
         public string MessageBodyTextBox {
@@ -115,6 +148,24 @@ namespace coursework.ViewModels
             }
         }
 
+
+        public string _cCode;
+        public string cCode
+        {
+            get
+            {
+                return _cCode;
+            }
+            set
+            {
+                if (_cCode != value)
+                {
+                    _cCode = value;
+                    OnPropertyChanged("cCode");
+                }
+
+            }
+        }
 
         public string _MessageHeaderTextBox;
         public string MessageHeaderTextBox
@@ -171,6 +222,7 @@ namespace coursework.ViewModels
             LoadXMLCommand = new RelayCommands(LoadXMLClick);
             GenerateReportCommand = new RelayCommands(GenerateReportClick);
             AddNewCommand = new RelayCommands(AddNew);
+            AddNewSirCommand = new RelayCommands(AddNewSir);
 
             p = new MessageProcessor();
             p.loadAbbreviations();
@@ -179,6 +231,9 @@ namespace coursework.ViewModels
 
         private void AddNew()
         {
+            MessageBox.Show(userChoice);
+            MessageBox.Show(_cCode);
+
             if (_MessageHeaderTextBox == string.Empty || _MessageBodyTextBox == string.Empty || _Sender == string.Empty)
             {
                 MessageBox.Show("Please fill the values for header, sender and message body");
@@ -198,9 +253,84 @@ namespace coursework.ViewModels
                 MessageBox.Show("Message succesfully added!");
             }
         }
+
+
+        private void AddNewSir()
+        {
+            if (_MessageHeaderTextBox == string.Empty || _MessageBodyTextBox == string.Empty || _Sender == string.Empty)
+            {
+                MessageBox.Show("Please fill the values for header, sender and message body");
+
+            }
+            else if (!p.ValidateInput(_MessageHeaderTextBox, _Sender, _Subject)) { }
+            else if (!p.validateSirDate(_Subject)) { }
+            else if (!p.validateSirCentreCode(_cCode) || _cCode == string.Empty) {
+                MessageBox.Show("Please enter a valid Centre Code numbers in syntax - XX-XXX-XX");
+            }
+            else if (userChoice == string.Empty)
+            {
+                MessageBox.Show("Please pick a nature of incident");
+            }
+            else
+            {
+                _Subject = "SIR" + _Subject;
+                Message mes = new Message(_MessageHeaderTextBox, _Sender, _Subject,
+                    "Centre Code: "+_cCode+"\n" +
+                    "Nature of incident: "+ userChoice+ "\n"+
+                    p.replaceAbreviations(_MessageBodyTextBox));
+                
+                mes.Type = p.SetType(mes.Header);
+                this.MessageList.Add(mes);
+                this.SirList.Add(mes);
+
+                MessageHeaderTextBox = string.Empty;
+                MessageBodyTextBox = string.Empty;
+                Subject = string.Empty;
+                Sender = string.Empty;
+                MessageBox.Show("Message succesfully added!");
+            }
+        }
+
+
         private void GenerateReportClick()
         {
-            MessageBox.Show("Generate Report Click");         
+            MessageBox.Show("Generate Report Click");
+            string hold = "";
+            hold += "\nList of mentions: \n\n";
+            for (int i = 0; i < p.listOfMentions.Count; i++)
+            {                
+                hold += p.listOfMentions[i]+ 
+                "\n";
+            }
+            hold += "\nList of Hashtags: \n\n";
+            for (int i = 0; i < p.listOfHashtags.Count; i++)
+            {                
+                hold += p.listOfHashtags[i] +
+                "\n";
+            }
+            hold += "\nList of Emails: \n\n";
+            for (int i = 0; i < p.listOfEmails.Count; i++)
+            {             
+                hold += p.listOfEmails[i] +
+                "\n";
+            }
+            hold += "\nList of Significant Incidents: \n";
+            for (int i = 0; i < SirList.Count; i++)
+            {               
+                hold += SirList[i].ToString()+ "\n\n" ;
+            }
+
+
+            if (hold != null)
+            {
+                MessageWindow window = new MessageWindow(hold.ToString());
+                window.WindowStartupLocation = WindowStartupLocation.CenterScreen;
+                window.Topmost = true;
+                window.Show();
+
+            }
+
+
         }
 
         private void LoadXMLClick()
@@ -227,10 +357,12 @@ namespace coursework.ViewModels
                 Message mes = new Message(node["Header"].InnerText,
                                           node["Sender"].InnerText,
                                           node["Subject"].InnerText,
-                                          node["Body"].InnerText);
+                                          p.replaceAbreviations(node["Body"].InnerText)
+                                         );
 
                 mes.Type = processor.SetType(mes.Header);
                 this.MessageList.Add(mes);
+              
             }
                                 
             /* string json = JsonConvert.SerializeXmlNode(doc);
