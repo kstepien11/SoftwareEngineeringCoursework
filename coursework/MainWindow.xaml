@@ -127,6 +127,8 @@
                 HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="150" Grid.ColumnSpan="2" Margin="35,5,5,5"/>
                 <Button Content="{Binding GenerateReportButtonText}" Command="{Binding GenerateReportCommand}" Grid.Row="3" Grid.Column="1"
                 HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="150" Grid.ColumnSpan="2" Margin="195,5,5,5"/>
+                <Button Content="Save Messages to Json" Command="{Binding SaveToJsonCommand}" Grid.Row="3" Grid.Column="1"
+                HorizontalAlignment="Left" VerticalAlignment="Top" MinWidth="150" Grid.ColumnSpan="2" Margin="355,5,5,5"/>
 
 
 

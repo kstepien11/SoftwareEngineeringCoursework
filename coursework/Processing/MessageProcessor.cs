@@ -13,7 +13,7 @@ namespace coursework
         List<string> abbreviations ;
         List<string> replaceWith ;
         public List<string> listOfMentions { get; set; }
-        public List<string> listOfEmails { get; set; }
+        public List<string> listOfURL { get; set; }
         public List<string> listOfHashtags { get; set; }
 
         string startupPath = Environment.CurrentDirectory;
@@ -24,7 +24,7 @@ namespace coursework
             this.replaceWith = new List<string>();
             this.listOfMentions = new List<string>();
             this.listOfHashtags = new List<string>();
-            this.listOfEmails = new List<string>();
+            this.listOfURL = new List<string>();
 
         }
 
@@ -143,7 +143,7 @@ namespace coursework
             foreach (Match match in regexURL.Matches(hold))
             {
                 //MessageBox.Show("found email" + match.Value);
-                this.listOfEmails.Add(match.Value);
+                this.listOfURL.Add(match.Value);
             }
             foreach (Match match in hashtags.Matches(hold))
             {
@@ -185,6 +185,18 @@ namespace coursework
             bool check = true;
             Regex regCCode = new Regex(@"^[0-9]{2}-[0-9]{3}-[0-9]{2}");
             Match match = regCCode.Match(cCode);
+            if (!match.Success)
+            {
+                check = false;
+            }
+            return check;
+        }
+
+        public bool validateSirFromFile(string subject)
+        {
+            bool check = true;
+            Regex regSirSubject = new Regex(@"^(?:SIR)[0-9]{2}\/[0-9]{2}\/[0-9]{2}");
+            Match match = regSirSubject.Match(subject);
             if (!match.Success)
             {
                 check = false;

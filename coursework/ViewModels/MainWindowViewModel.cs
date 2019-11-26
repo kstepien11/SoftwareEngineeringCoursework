@@ -43,7 +43,6 @@ namespace coursework.ViewModels
                 this.OnPropertyChanged("MessageList");
             }
         }
-
         public ObservableCollection<Message> sirList;
         public ObservableCollection<Message> SirList
         {
@@ -69,8 +68,7 @@ namespace coursework.ViewModels
                 this.OnPropertyChanged("SirList");
             }
         }
-
-
+        
         public List<string> _incidentNature;
         public List<string> incidentNature {
             get {
@@ -96,6 +94,7 @@ namespace coursework.ViewModels
         public ICommand GenerateReportCommand { get; private set; }
         public ICommand AddNewCommand { get; private set; }
         public ICommand AddNewSirCommand { get; private set; }
+        public ICommand SaveToJsonCommand { get; private set; }
 
         public string _MessageBodyTextBox;
         public string MessageBodyTextBox {
@@ -223,6 +222,7 @@ namespace coursework.ViewModels
             GenerateReportCommand = new RelayCommands(GenerateReportClick);
             AddNewCommand = new RelayCommands(AddNew);
             AddNewSirCommand = new RelayCommands(AddNewSir);
+            SaveToJsonCommand = new RelayCommands(SaveToJson);
 
             p = new MessageProcessor();
             p.loadAbbreviations();
@@ -294,7 +294,7 @@ namespace coursework.ViewModels
 
         private void GenerateReportClick()
         {
-            MessageBox.Show("Generate Report Click");
+           
             string hold = "";
             hold += "\nList of mentions: \n\n";
             for (int i = 0; i < p.listOfMentions.Count; i++)
@@ -302,21 +302,22 @@ namespace coursework.ViewModels
                 hold += p.listOfMentions[i]+ 
                 "\n";
             }
-            hold += "\nList of Hashtags: \n\n";
+            hold += "-----------------------------------\nList of Hashtags: \n\n";
             for (int i = 0; i < p.listOfHashtags.Count; i++)
             {                
                 hold += p.listOfHashtags[i] +
                 "\n";
             }
-            hold += "\nList of Emails: \n\n";
-            for (int i = 0; i < p.listOfEmails.Count; i++)
+            hold += "-----------------------------------\nList of Emails: \n\n";
+            for (int i = 0; i < p.listOfURL.Count; i++)
             {             
-                hold += p.listOfEmails[i] +
+                hold += p.listOfURL[i] +
                 "\n";
             }
-            hold += "\nList of Significant Incidents: \n";
+            hold += "----------------------------------\nList of Significant Incidents: \n\n";
             for (int i = 0; i < SirList.Count; i++)
-            {               
+            {
+                if (i==1)hold += "\n-------Next Message------\\nn";            
                 hold += SirList[i].ToString()+ "\n\n" ;
             }
 
@@ -361,13 +362,35 @@ namespace coursework.ViewModels
                                          );
 
                 mes.Type = processor.SetType(mes.Header);
+
                 this.MessageList.Add(mes);
-              
+                if (p.validateSirFromFile(mes.Subject)) this.SirList.Add(mes);
             }
                                 
-            /* string json = JsonConvert.SerializeXmlNode(doc);
-             MessageBox.Show(json);
-             File.WriteAllText(@"messages.json", JsonConvert.SerializeObject(json, Newtonsoft.Json.Formatting.Indented));*/
+            
+            
+
+        }
+
+        private void SaveToJson()
+        {
+
+
+            try
+            {
+                var json = JsonConvert.SerializeObject(MessageList);
+                json += JsonConvert.SerializeObject(SirList);
+                json += JsonConvert.SerializeObject(p.listOfURL);
+                json += JsonConvert.SerializeObject(p.listOfHashtags);
+                json += JsonConvert.SerializeObject(p.listOfMentions);
+
+                
+                System.IO.File.WriteAllText(Environment.CurrentDirectory + @"\coursework.json", json);
+                MessageBox.Show("Successfully saved to"+ Environment.CurrentDirectory + @"\coursework.json");
+            }
+            catch {
+                MessageBox.Show("Saving the file unsucessful");
+            }
 
         }
 
